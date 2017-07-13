@@ -14,5 +14,17 @@ module WeixinBotWebui
     # Settings in config/environments/* take precedence over those specified here.
     # Application configuration should go into files in config/initializers
     # -- all .rb files in that directory are automatically loaded.
+    config.time_zone = 'Beijing'
+    config.i18n.default_locale = :'zh-CN'
+    config.i18n.available_locales = [:'zh-CN', :'en']
+
+    config.generators do |g|
+      g.orm :active_record
+      g.template_engine :erb
+      g.stylesheets false
+      g.javascripts false
+      g.helper false
+      g.test_framework ""
+    end
   end
 end

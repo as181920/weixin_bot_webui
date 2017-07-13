@@ -1,24 +1,17 @@
 # README
 
-This README would normally document whatever steps are necessary to get the
-application up and running.
+微信机器人（Rails版本）
 
-Things you may want to cover:
+* 登录web微信
 
-* Ruby version
+* 获取信息
 
-* System dependencies
+* 获取联系人
 
-* Configuration
+* 获取消息
 
-* Database creation
+* 自动回复
 
-* Database initialization
-
-* How to run the test suite
-
-* Services (job queues, cache servers, search engines, etc.)
-
-* Deployment instructions
+* 获取被对方把删除的联系人
 
 * ...

@@ -1,0 +1,20 @@
+default: &default
+  host: 127.0.0.1
+  adapter: postgresql
+  encoding: unicode
+  pool: <%= ENV.fetch("RAILS_MAX_THREADS") { 5 } %>
+  username: dbuser
+  password: dbpassword
+  schema_search_path: "public"
+
+development:
+  <<: *default
+  database: weixin_bot_development
+
+test:
+  <<: *default
+  database: weixin_bot_test
+
+production:
+  <<: *default
+  database: weixin_bot_production
