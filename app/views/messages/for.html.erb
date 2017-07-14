@@ -15,3 +15,23 @@
     </li>
   <% end %>
 </ul>
+
+<script type="text/javascript">
+  App.bot_message = App.cable.subscriptions.create({channel: "BotMessageChannel", user_wxuin: "<%= @user.wxuin %>"}, {
+    connected: function() {
+      console.log("BotMessageChannel connected @ " + new Date());
+    },
+
+    disconnected: function() {
+      console.log("BotMessageChannel disconnected @ " + new Date());
+    },
+
+    received: function(data) {
+      msg = JSON.parse(data);
+      console.log(msg);
+      html = `<li> ${msg.msg_type_name} <br> ${msg.from} <br> ${msg.to} <br> ${msg.sender} <br> ${msg.content} <br> ${msg.create_time} </li>`;
+      el = document.getElementsByTagName("ul")[0];
+      el.innerHTML = html + el.innerHTML;
+    }
+  });
+</script>

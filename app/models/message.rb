@@ -38,4 +38,17 @@ class Message < ApplicationRecord
   def sender
     Contact.find_by(name: sender_user_name)&.nick_name || sender_user_name
   end
+
+  def pretty
+    {
+      user: user.wxuin,
+      msg_id: msg_id,
+      msg_type_name: msg_type_name,
+      from: from,
+      to: to,
+      sender: sender,
+      content: content,
+      create_time: create_time.strftime("%F %T")
+    }
+  end
 end
