@@ -39,7 +39,7 @@ class Message < ApplicationRecord
     Contact.find_by(name: sender_user_name)&.nick_name || sender_user_name
   end
 
-  def pretty
+  def as_json
     {
       user: user.wxuin,
       msg_id: msg_id,

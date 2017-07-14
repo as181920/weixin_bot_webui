@@ -14,7 +14,7 @@ module WeixinBotCli
           sender_user_name: sender_user_name,
           content: content
         )
-        BotMessageBroadcastJob.perform_later("bot.message.#{message.user.wxuin}", message.pretty.to_json)
+        BotMessageBroadcastJob.perform_later("bot.message.#{message.user.wxuin}", message.as_json)
       end
 
       if content =~ /@#{bot.current_user["NickName"]}/

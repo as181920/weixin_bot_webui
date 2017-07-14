@@ -27,9 +27,8 @@
     },
 
     received: function(data) {
-      msg = JSON.parse(data);
-      console.log(msg);
-      html = `<li> ${msg.msg_type_name} <br> ${msg.from} <br> ${msg.to} <br> ${msg.sender} <br> ${msg.content} <br> ${msg.create_time} </li>`;
+      console.log(data);
+      html = `<li> ${data.msg_type_name} <br> ${data.from} <br> ${data.to} <br> ${data.sender} <br> ${data.content} <br> ${data.create_time} </li>`;
       el = document.getElementsByTagName("ul")[0];
       el.innerHTML = html + el.innerHTML;
     }

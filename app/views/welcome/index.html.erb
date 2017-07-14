@@ -22,7 +22,7 @@
 
     received: function(data) {
       console.log(data);
-      window.location.href = "/messages/for/"+JSON.parse(data).wxuin;
+      window.location.href = "/messages/for/"+data.wxuin;
     }
   });
 </script>
