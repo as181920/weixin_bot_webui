@@ -1,6 +1,6 @@
 GIT
   remote: git@gitlab.io-note.com:weixin.message.handler/weixin_bot_cli.git
-  revision: 4dbf3bb56054c0d703cad8105be8b8e7dd0a532e
+  revision: d7d1557ce7e5af8711a33081e2a05dd41daf44f6
   branch: master
   specs:
     weixin_bot_cli (0.1.0)
@@ -272,4 +272,4 @@ DEPENDENCIES
   weixin_bot_cli!
 
 BUNDLED WITH
-   1.14.6
+   1.15.1
