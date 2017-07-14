@@ -1,0 +1,17 @@
+<ul>
+  <% @messages.each do |msg| %>
+    <li>
+      <%= msg.msg_type_name %>
+      <br/>
+      <%= msg.from %>
+      <br/>
+      <%= msg.to %>
+      <br/>
+      <%= msg.sender %>
+      <br/>
+      <%= msg.content %>
+      <br/>
+      <%= msg.create_time.strftime("%F %T") %>
+    </li>
+  <% end %>
+</ul>
