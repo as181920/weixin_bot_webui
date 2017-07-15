@@ -1,36 +1,138 @@
-<ul>
-  <% @messages.each do |msg| %>
-    <li>
-      <%= msg.msg_type_name %>
-      <br/>
-      <%= msg.from %>
-      <br/>
-      <%= msg.to %>
-      <br/>
-      <%= msg.sender %>
-      <br/>
-      <%= msg.content %>
-      <br/>
-      <%= msg.create_time.strftime("%F %T") %>
-    </li>
-  <% end %>
-</ul>
+<div id="body-container">
+  <style scoped>
+    #body-container { max-width: 750px; margin: 0 auto; height: 100%; }
 
-<script type="text/javascript">
-  App.bot_message = App.cable.subscriptions.create({channel: "BotMessageChannel", user_wxuin: "<%= @user.wxuin %>"}, {
-    connected: function() {
-      console.log("BotMessageChannel connected @ " + new Date());
-    },
-
-    disconnected: function() {
-      console.log("BotMessageChannel disconnected @ " + new Date());
-    },
-
-    received: function(data) {
-      console.log(data);
-      html = `<li> ${data.msg_type_name} <br> ${data.from} <br> ${data.to} <br> ${data.sender} <br> ${data.content} <br> ${data.create_time} </li>`;
-      el = document.getElementsByTagName("ul")[0];
-      el.innerHTML = html + el.innerHTML;
+    #menu-bar {
+      overflow: hidden;
+      background-color: #F1F1F1;
     }
-  });
-</script>
+    #menu-bar a {
+      float: left;
+      display: block;
+      color: black;
+      text-align: center;
+      padding: 4px 12px;
+      text-decoration: none;
+      font-size: 16px;
+    }
+    #menu-bar a:hover {
+      background-color: #ddd;
+      color: black;
+    }
+    #menu-bar a.active {
+      background-color: #4CAF50;
+      color: white;
+    }
+
+    .search-bar .form-group {
+      padding: 4px 12px;
+      float: left;
+    }
+    .search-bar .search-submit {
+      padding: 4px 12px;
+    }
+    .search-bar .button {
+      background-color: #4CAF50;
+      border: none;
+      color: white;
+      text-align: center;
+      text-decoration: none;
+      display: inline-block;
+    }
+
+    .message-list table {
+      width: 100%;
+    }
+    .message-list table, th, td {
+      border: 1px solid black; 
+      border-collapse: collapse;
+      padding: 15px;
+      border-spacing: 5px;
+      word-break: break-all;
+    }
+    .message-list table tr:nth-child(even) {
+      background-color: #eee;
+    }
+    .message-list table tr:nth-child(odd) {
+      background-color: #fff;
+    }
+    .message-list table th {
+      color: white;
+      background-color: #4CAF50;
+    }
+  </style>
+
+  <div id="menu-bar">
+    <%= link_to @user.nick_name, messages_for_user_path(@user.wxuin), class: (request.path == messages_for_user_path(@user.wxuin) ? "active" : "") %>
+    <%= link_to "FakeContacts", "#todo", class: "" %>
+  </div>
+
+  <div class="search-bar">
+    <%= search_form_for @q, url: messages_for_user_path(@user.wxuin) do |f| %>
+      <div class="form-group">
+      <%= f.label :from_cont, "会话" %>
+      <%= f.search_field :from_cont %>
+      </div>
+
+      <div class="form-group">
+      <%= f.label :sender_cont, "发送者" %>
+      <%= f.search_field :sender_cont %>
+      </div>
+
+      <div class="form-group">
+      <%= f.label :content_cont, "内容" %>
+      <%= f.search_field :content_cont %>
+      </div>
+
+      <%= f.submit class: "button search-submit" %>
+    <% end %>
+  </div>
+
+  <div class="message-list">
+    <table>
+      <thead>
+        <tr>
+          <th style="min-width: 100px;">会话</th>
+          <th style="min-width: 100px;">发送者</th>
+          <th style="min-width: 100px;">消息类型</th>
+          <th>内容</th>
+          <th style="min-width: 120px;">时间</th>
+        </tr>
+      </thead>
+      <tbody>
+      <% @messages.each do |msg| %>
+        <tr>
+          <td><%= msg.from %></td>
+          <td><%= msg.sender %></td>
+          <td><%= msg.msg_type_name %></td>
+          <td><%= msg.as_json[:content] %></td>
+          <td><%= msg.create_time.strftime("%m-%d %H:%M") %></td>
+        </tr>
+      <% end %>
+      </tbody>
+    </table>
+  </div>
+
+  <%= paginate @messages %>
+
+  <script type="text/javascript">
+    <% if params[:q].blank? %>
+      App.bot_message = App.cable.subscriptions.create({channel: "BotMessageChannel", user_wxuin: "<%= @user.wxuin %>"}, {
+        connected: function() {
+          console.log("BotMessageChannel connected @ " + new Date());
+        },
+
+        disconnected: function() {
+          console.log("BotMessageChannel disconnected @ " + new Date());
+        },
+
+        received: function(data) {
+          console.log(data);
+          // html = `<li> ${data.msg_type_name} <br> ${data.from} <br> ${data.to} <br> ${data.sender} <br> ${data.content} <br> ${data.create_time} </li>`;
+          // el = document.getElementsByTagName("ul")[0];
+          // el.innerHTML = html + el.innerHTML;
+        }
+      });
+    <% end %>
+  </script>
+</div>
