@@ -4,6 +4,7 @@ module WeixinBotCli
       user = User.find_or_create_by(wxuin: bot.current_user["Uin"])
       sender, content = parse_msg_content(msg)
 
+      # persist record
       if content.present?
         message = user.messages.create(
           msg_id: msg["MsgId"],
@@ -16,6 +17,9 @@ module WeixinBotCli
         )
         BotMessageBroadcastJob.perform_later("bot.message.#{message.user.wxuin}", message.as_json)
       end
+
+      # reply
+      return nil if sender == bot.current_user["NickName"] # skip myself message
 
       if content =~ /@#{bot.current_user["NickName"]}/
         return {Content: "@#{sender} 哼", Type: 1}
