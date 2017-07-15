@@ -63,17 +63,12 @@
   </style>
 
   <div id="menu-bar">
-    <%= link_to @user.nick_name, messages_for_user_path(@user.wxuin), class: (request.path == messages_for_user_path(@user.wxuin) ? "active" : "") %>
-    <%= link_to "FakeContacts", "#todo", class: "" %>
+    <%= link_to params[:from], messages_from_chat_path(@user.wxuin, params[:from]), class: "active" %>
+    <%= link_to @user.nick_name, messages_for_user_path(@user.wxuin), class: "" %>
   </div>
 
   <div class="search-bar">
-    <%= search_form_for @q, url: messages_for_user_path(@user.wxuin) do |f| %>
-      <div class="form-group">
-        <%= f.label :from_cont, "会话" %>
-        <%= f.search_field :from_cont %>
-      </div>
-
+    <%= search_form_for @q, url: messages_from_chat_path(@user.wxuin, params[:from]) do |f| %>
       <div class="form-group">
         <%= f.label :sender_cont, "发送者" %>
         <%= f.search_field :sender_cont %>
@@ -92,7 +87,6 @@
     <table>
       <thead>
         <tr>
-          <th style="min-width: 100px;">会话</th>
           <th style="min-width: 100px;">发送者</th>
           <th style="min-width: 100px;">消息类型</th>
           <th>内容</th>
@@ -101,7 +95,6 @@
       </thead>
       <tbody>
         <tr v-for="(msg, idx) in messages">
-          <td><a v-bind:href="'/messages/for/'+wxuin+'/from/'+msg.from">{{ msg.from }}</a></td>
           <td>{{ msg.sender }}</td>
           <td>{{ msg.msg_type_name }}</td>
           <td>{{ msg.content }}</td>
@@ -118,7 +111,8 @@
       el: "#message-list",
       data: function(){
         return {
-          wxuin: <%= sanitize @user.wxuin %>,
+          wxuin: "<%= sanitize @user.wxuin %>",
+          from: "<%= sanitize params[:from] %>",
           messages: <%= sanitize @messages.map(&:as_json).to_json %>
         };
       },
@@ -142,7 +136,9 @@
 
         received: function(data) {
           console.log(data);
-          vue.messages.unshift(data);
+          if (data.from == vue.from) {
+            vue.messages.unshift(data);
+          }
         }
       });
     <% end %>
