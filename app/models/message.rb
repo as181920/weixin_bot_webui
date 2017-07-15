@@ -1,7 +1,7 @@
 class Message < ApplicationRecord
   belongs_to :user
 
-  validates_presence_of :user, :msg_id, :from_user_name, :to_user_name, :msg_type, :create_time
+  validates_presence_of :user, :msg_id, :from, :to, :msg_type, :sender, :create_time
   validates_uniqueness_of :msg_id
 
   def msg_type_name
@@ -27,18 +27,6 @@ class Message < ApplicationRecord
     }[msg_type]
   end
 
-  def from
-    Contact.find_by(name: from_user_name)&.nick_name || from_user_name
-  end
-
-  def to
-    Contact.find_by(name: to_user_name)&.nick_name || to_user_name
-  end
-
-  def sender
-    Contact.find_by(name: sender_user_name)&.nick_name || sender_user_name
-  end
-
   def as_json
     {
       user: user.wxuin,
@@ -47,7 +35,7 @@ class Message < ApplicationRecord
       from: from,
       to: to,
       sender: sender,
-      content: content,
+      content: (msg_type == 1 ? content : "..."),
       create_time: create_time.strftime("%F %T")
     }
   end

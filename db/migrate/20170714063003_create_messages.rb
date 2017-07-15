@@ -3,10 +3,10 @@ class CreateMessages < ActiveRecord::Migration[5.1]
     create_table :messages do |t|
       t.references :user, foreign_key: true
       t.string :msg_id
-      t.string :from_user_name, index: true
-      t.string :to_user_name
+      t.string :from, index: true
+      t.string :to
       t.integer :msg_type
-      t.string :sender_user_name
+      t.string :sender
       t.text :content
       t.timestamp :create_time
 

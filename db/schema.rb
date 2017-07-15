@@ -17,30 +17,29 @@ ActiveRecord::Schema.define(version: 20170714063003) do
 
   create_table "contacts", force: :cascade do |t|
     t.bigint "user_id"
-    t.string "name"
     t.string "nick_name"
     t.string "signature"
-    t.index ["name"], name: "index_contacts_on_name", unique: true
+    t.string "chat_group_name"
+    t.datetime "created_at"
     t.index ["user_id"], name: "index_contacts_on_user_id"
   end
 
   create_table "messages", force: :cascade do |t|
     t.bigint "user_id"
     t.string "msg_id"
-    t.string "from_user_name"
-    t.string "to_user_name"
+    t.string "from"
+    t.string "to"
     t.integer "msg_type"
-    t.string "sender_user_name"
+    t.string "sender"
     t.text "content"
     t.datetime "create_time"
     t.datetime "created_at"
-    t.index ["from_user_name"], name: "index_messages_on_from_user_name"
+    t.index ["from"], name: "index_messages_on_from"
     t.index ["user_id"], name: "index_messages_on_user_id"
   end
 
   create_table "users", force: :cascade do |t|
     t.string "wxuin"
-    t.string "name"
     t.string "nick_name"
     t.string "signature"
     t.datetime "created_at", null: false

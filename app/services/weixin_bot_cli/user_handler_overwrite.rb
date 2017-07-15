@@ -1,9 +1,9 @@
 module WeixinBotCli
   class UserHandler
-    def handle(user)
-      user = User.find_or_initialize_by(wxuin: user["Uin"])
-      user.update(name: user["UserName"], nick_name: user["NickName"], signature: user["Signature"])
-      # user.contacts.destroy_all
+    def handle(msg)
+      user = User.find_or_initialize_by(wxuin: msg["Uin"])
+      user.update(nick_name: msg["NickName"], signature: msg["Signature"])
+      user.contacts.delete_all
 
       BotEventBroadcastJob.perform_later("bot.event.#{bot.uuid}", user.as_json)
     end
