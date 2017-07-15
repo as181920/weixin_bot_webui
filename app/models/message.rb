@@ -36,7 +36,7 @@ class Message < ApplicationRecord
       to: to,
       sender: sender,
       content: (msg_type == 1 ? content : "..."),
-      create_time: create_time.strftime("%F %T")
+      create_time: create_time.strftime("%m-%d %H:%M")
     }
   end
 end

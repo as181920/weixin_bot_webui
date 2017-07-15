@@ -40,23 +40,23 @@
       display: inline-block;
     }
 
-    .message-list table {
+    #message-list table {
       width: 100%;
     }
-    .message-list table, th, td {
+    #message-list table, th, td {
       border: 1px solid black; 
       border-collapse: collapse;
       padding: 15px;
       border-spacing: 5px;
       word-break: break-all;
     }
-    .message-list table tr:nth-child(even) {
+    #message-list table tr:nth-child(even) {
       background-color: #eee;
     }
-    .message-list table tr:nth-child(odd) {
+    #message-list table tr:nth-child(odd) {
       background-color: #fff;
     }
-    .message-list table th {
+    #message-list table th {
       color: white;
       background-color: #4CAF50;
     }
@@ -88,7 +88,7 @@
     <% end %>
   </div>
 
-  <div class="message-list">
+  <div id="message-list">
     <table>
       <thead>
         <tr>
@@ -100,15 +100,13 @@
         </tr>
       </thead>
       <tbody>
-      <% @messages.each do |msg| %>
-        <tr>
-          <td><%= msg.from %></td>
-          <td><%= msg.sender %></td>
-          <td><%= msg.msg_type_name %></td>
-          <td><%= msg.as_json[:content] %></td>
-          <td><%= msg.create_time.strftime("%m-%d %H:%M") %></td>
+        <tr v-for="(msg, idx) in messages">
+          <td>{{ msg.from }}</td>
+          <td>{{ msg.sender }}</td>
+          <td>{{ msg.msg_type_name }}</td>
+          <td>{{ msg.content }}</td>
+          <td>{{ msg.create_time }}</td>
         </tr>
-      <% end %>
       </tbody>
     </table>
   </div>
@@ -116,6 +114,21 @@
   <%= paginate @messages %>
 
   <script type="text/javascript">
+    var message_list = new Vue({
+      el: "#message-list",
+      data: function(){
+        return {
+          messages: <%= sanitize @messages.map(&:as_json).to_json %>
+        };
+      },
+      methods: {
+      },
+      mounted: {
+      },
+      updated: {
+      }
+    });
+
     <% if params[:q].blank? %>
       App.bot_message = App.cable.subscriptions.create({channel: "BotMessageChannel", user_wxuin: "<%= @user.wxuin %>"}, {
         connected: function() {
@@ -128,9 +141,7 @@
 
         received: function(data) {
           console.log(data);
-          // html = `<li> ${data.msg_type_name} <br> ${data.from} <br> ${data.to} <br> ${data.sender} <br> ${data.content} <br> ${data.create_time} </li>`;
-          // el = document.getElementsByTagName("ul")[0];
-          // el.innerHTML = html + el.innerHTML;
+          message_list.messages.unshift(data);
         }
       });
     <% end %>
