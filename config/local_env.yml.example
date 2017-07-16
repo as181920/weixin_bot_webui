@@ -1,0 +1,12 @@
+default: &default
+  SECRET_KEY_BASE: 'filler'
+  tuling123_api_key: 'filler'
+
+development:
+  <<: *default
+
+test:
+  <<: *default
+
+production:
+  <<: *default
