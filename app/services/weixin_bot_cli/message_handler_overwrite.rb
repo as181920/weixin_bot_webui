@@ -21,9 +21,23 @@ module WeixinBotCli
       # reply
       return nil if sender == bot.current_user["NickName"] # skip myself message
 
-      if content =~ /@#{bot.current_user["NickName"]}/
+      if content =~ /^@#{bot.current_user["NickName"]}\W+h/
         return {Content: "@#{sender} 哼", Type: 1}
+      elsif content =~ /^@#{bot.current_user["NickName"]}\W+tl/
+        info = content.split(" tl", 2)[-1]
+        reply = get_tuling123_reply(info)
+        return {Content: reply, Type: 1} if reply
+      else
       end
     end
+
+    private
+      def get_tuling123_reply(info)
+        resp = Faraday.post "http://www.tuling123.com/openapi/api", {key: ENVConfig.tuling123_api_key, info: info, userid: "181920}"}
+        JSON.load(resp.body)['text']
+      rescue => e
+        puts "#{e.class.name}: #{e.message}"
+        return nil
+      end
   end
 end
