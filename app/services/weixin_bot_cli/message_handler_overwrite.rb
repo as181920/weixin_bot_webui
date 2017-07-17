@@ -1,6 +1,6 @@
 module WeixinBotCli
   class MessageHandler
-    def handle(msg, bot)
+    def handle(msg)
       user = User.find_or_create_by(wxuin: bot.current_user["Uin"])
       sender, content = parse_msg_content(msg)
 

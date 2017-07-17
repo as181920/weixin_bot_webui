@@ -20,6 +20,7 @@ ActiveRecord::Schema.define(version: 20170714063003) do
     t.string "nick_name"
     t.string "signature"
     t.string "chat_group_name"
+    t.integer "status"
     t.datetime "created_at"
     t.index ["user_id"], name: "index_contacts_on_user_id"
   end

@@ -1,0 +1,28 @@
+<div class="qrcode">
+  <style scoped>
+    .qrcode {
+      display: block;
+      width: 330px;
+      margin: auto;
+      margin-top: 20%;
+    }
+  </style>
+  <%= raw RQRCode::QRCode.new("https://login.weixin.qq.com/l/#{@uuid}", :size => 4, :level => :l).as_html %>
+</div>
+
+<script type="text/javascript">
+  App.bot_event = App.cable.subscriptions.create({channel: "BotEventChannel", bot_uuid: "<%= String(@uuid) %>"}, {
+    connected: function() {
+      console.log("BotEventChannel connected @ " + new Date());
+    },
+
+    disconnected: function() {
+      console.log("BotEventChannel disconnected @ " + new Date());
+    },
+
+    received: function(data) {
+      console.log(data);
+      window.location.href = "/contacts/for/"+data.wxuin+"/fake";
+    }
+  });
+</script>

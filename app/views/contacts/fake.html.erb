@@ -1,0 +1,112 @@
+<div id="body-container">
+  <style scoped>
+    #body-container { max-width: 750px; margin: 0 auto; height: 100%; }
+
+    #menu-bar {
+      overflow: hidden;
+      background-color: #F1F1F1;
+    }
+    #menu-bar a {
+      float: left;
+      display: block;
+      color: black;
+      text-align: center;
+      padding: 4px 12px;
+      text-decoration: none;
+      font-size: 16px;
+    }
+    #menu-bar a:hover {
+      background-color: #ddd;
+      color: black;
+    }
+    #menu-bar a.active {
+      background-color: #4CAF50;
+      color: white;
+    }
+
+    #message-list {
+      margin: 10px 0;
+    }
+    #message-list table {
+      width: 100%;
+    }
+    #message-list table, th, td {
+      border: 1px solid black; 
+      border-collapse: collapse;
+      padding: 15px;
+      border-spacing: 5px;
+      word-break: break-all;
+    }
+    #message-list table tr:nth-child(even) {
+      background-color: #eee;
+    }
+    #message-list table tr:nth-child(odd) {
+      background-color: #fff;
+    }
+    #message-list table th {
+      color: white;
+      background-color: #4CAF50;
+    }
+  </style>
+
+  <div id="menu-bar">
+    <%= link_to @user.nick_name, messages_for_user_path(@user.wxuin), class: "" %>
+    <%= link_to "FakeContacts", fake_contacts_for_user_path(@user.wxuin), class: "active" %>
+  </div>
+
+  <div id="message-list">
+    <table>
+      <thead>
+        <tr>
+          <th style="min-width: 100px;">联系人</th>
+          <th style="min-width: 100px;">签名</th>
+          <th style="min-width: 100px;">状态</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr v-for="(contact, idx) in contacts">
+          <td>{{ contact.nick_name }}</td>
+          <td>{{ contact.signature }}</td>
+          <td>{{ contact.status }}</td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+
+  <script type="text/javascript">
+    var vue = new Vue({
+      el: "#message-list",
+      data: function(){
+        return {
+          wxuin: <%= sanitize @user.wxuin %>,
+          contacts: <%= sanitize @contacts.map(&:as_json).to_json %>
+        };
+      },
+      methods: {
+      },
+      mounted: {
+      },
+      updated: {
+      }
+    });
+
+    <% if params[:q].blank? %>
+      App.bot_message = App.cable.subscriptions.create({channel: "BotContactChannel", user_wxuin: "<%= @user.wxuin %>"}, {
+        connected: function() {
+          console.log("BotContactChannel connected @ " + new Date());
+        },
+
+        disconnected: function() {
+          console.log("BotContactChannel disconnected @ " + new Date());
+        },
+
+        received: function(data) {
+          console.log(data);
+          if (data.status) {
+            vue.contacts.unshift(data);
+          }
+        }
+      });
+    <% end %>
+  </script>
+</div>

@@ -5,6 +5,7 @@ class CreateContacts < ActiveRecord::Migration[5.1]
       t.string :nick_name
       t.string :signature
       t.string :chat_group_name
+      t.integer :status
 
       t.datetime :created_at
     end

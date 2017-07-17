@@ -5,7 +5,7 @@ module WeixinBotCli
       user.update(nick_name: msg["NickName"], signature: msg["Signature"])
       user.contacts.delete_all
 
-      BotEventBroadcastJob.perform_later("bot.event.#{bot.uuid}", user.as_json)
+      BotMessageBroadcastJob.perform_later("bot.event.#{bot.uuid}", user.as_json)
     end
   end
 end
