@@ -64,7 +64,6 @@
 
   <div id="menu-bar">
     <%= link_to @user.nick_name, messages_for_user_path(@user.wxuin), class: (request.path == messages_for_user_path(@user.wxuin) ? "active" : "") %>
-    <%= link_to "FakeContacts", "#todo", class: "" %>
   </div>
 
   <div class="search-bar">
